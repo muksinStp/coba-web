@@ -6,7 +6,7 @@ const {isLoggedIn} = require('../helpers/util')
 module.exports = (db) => {
 router.get('/', isLoggedIn, async function(req, res, next) {
     const{rows: todos} = await db.query('SELECT* FROM todos WHERE userid = $1', [req.session.user.id])
-      res.render('todos/list', {todos});
+      res.render('todos/list', {title: 'Daftar Kerjaan', todos});
     });
     router.post('/add', isLoggedIn, async function(req, res, next) {
       const {title} = req.body

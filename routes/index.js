@@ -26,7 +26,11 @@ module.exports = (db) => {
   });
 
   router.get('/register', function (req, res, next) {
-    res.render('register', { title: 'Register' });
+    res.render('register', { 
+      title: 'Register',
+      errorMessage: req.flash('errorMessage'),
+      successMessage: req.flash('successMessage')
+    });
   });
   router.post('/register', async function (req, res, next) {
     const { email, password, repassword } = req.body
@@ -37,7 +41,7 @@ module.exports = (db) => {
       const hashPassword = bcrypt.hashSync(password, saltRounds);
 
       const { rows: user } = await db.query('INSERT INTO users (email, password) VALUES ($1, $2) RETURNING *', [email, hashPassword])
-      console.log(user[0])
+      req.flash('successMessage', 'user has been registered, please Sign In')
       res.redirect('/')
     } catch (e) {
       req.flash('errorMessage', e.message)
